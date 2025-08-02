@@ -1,5 +1,6 @@
 package com.example.demo.config;
 
+import com.example.demo.service.CustomOAuth2UserService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;
@@ -10,6 +11,13 @@ import org.springframework.security.web.SecurityFilterChain;
 @Configuration
 @EnableWebSecurity //WebSeurity 활성화
 public class SecurityConfig {
+
+    private final CustomOAuth2UserService customOAuth2UserService;
+
+    public SecurityConfig(CustomOAuth2UserService customOAuth2UserService) {
+        this.customOAuth2UserService = customOAuth2UserService;
+    }
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
@@ -19,7 +27,8 @@ public class SecurityConfig {
         http
                 .httpBasic((basic) -> basic.disable());
         http
-                .oauth2Login(Customizer.withDefaults());
+                .oauth2Login((oauth2) -> oauth2
+                        .userInfoEndpoint((userInfoEndpointConfig -> userInfoEndpointConfig.userService(customOAuth2UserService))));
         http //경로에 대한 인가 작업
                 .authorizeHttpRequests((auth) -> auth
                         .requestMatchers("/","/oauth2/**","/login/**").permitAll()
