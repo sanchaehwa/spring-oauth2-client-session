@@ -38,6 +38,8 @@ dependencies {
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 	//Env
 	implementation 'io.github.cdimascio:java-dotenv:5.2.2'
+	//jdbc
+	implementation 'org.springframework.boot:spring-boot-starter-jdbc'
 }
 
 tasks.named('test') {
